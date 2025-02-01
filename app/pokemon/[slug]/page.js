@@ -16,7 +16,7 @@ async function getPokemonData(name) {
 }
 
 export default async function PokemonDetail({ params }) {
-  const { slug: pokemon } = params;
+  const { slug: pokemon } = await params;
   const data = await getPokemonData(pokemon);
 
   if (!data) {
