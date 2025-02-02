@@ -2,21 +2,26 @@ import Image from "next/image";
 import Link from "next/link";
 import arrowIcon from "@/public/arrow.svg";
 
+export async function generateMetadata({ params }) {
+  return {
+    title: `${params.slug.toUpperCase()} - Pokémon Details`,
+    description: `Detailed stats, abilities, and types for ${params.slug}`,
+  };
+}
+
 async function getPokemonData(name) {
   try {
-    console.log("Fetching data for:", name);
     const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
 
     if (!res.ok) throw new Error(`Failed to fetch data for ${name}`);
     return res.json();
   } catch (err) {
-    console.log("Error fetching data:", err);
     return null;
   }
 }
 
 export default async function PokemonDetail({ params }) {
-  const { slug: pokemon } = await params;
+  const { slug: pokemon } = params;
   const data = await getPokemonData(pokemon);
 
   if (!data) {
@@ -45,9 +50,7 @@ export default async function PokemonDetail({ params }) {
       <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-xl mx-auto">
         <div className="bg-blue-500 rounded-xl overflow-hidden flex justify-center items-center p-6 mb-6">
           <Image
-            src={
-              "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
-            }
+            src={data?.sprites?.other["official-artwork"]?.front_default}
             alt={pokemon}
             width={200}
             height={200}
